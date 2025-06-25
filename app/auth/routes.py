@@ -15,7 +15,7 @@ from app.service import subscriber_service as subscriber_service
 from app.service import subscription_service as subscription_service
 from app.exporter import subscriber_exporter as exp_service
 
-from .utils import save_new_subscriber_and_subscription
+#from .utils import save_new_subscriber_and_subscription
 
 auth_bp= Blueprint('auth', __name__)
 
@@ -126,7 +126,7 @@ def add_subscriber_confirm():
 
     if data:
         
-        succes=save_new_subscriber_and_subscription(data,is_new_subscriber)
+        succes=subscriber_service.save_new_subscriber_and_subscription(data,is_new_subscriber)
         if succes:
             flash('Nuovo abbonato aggiunto con successo')
         else:
@@ -149,7 +149,7 @@ def confirm_existing_subscriber(subscriber_id):
         return redirect(url_for('auth.add_subscriber'))
     
     data['existing_subscriber_id']=subscriber_id
-    success = save_new_subscriber_and_subscription(data, is_new_subscriber)
+    success = subscriber_service.save_new_subscriber_and_subscription(data, is_new_subscriber)
     if success:
         flash('Vecchio abbonato inserito nella nuova stagione concertistica', 'success')
         return redirect(url_for('auth.success_page'))

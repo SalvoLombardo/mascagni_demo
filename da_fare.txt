@@ -34,3 +34,5 @@ IN SOSPESO
 - Controllare cosa succede se si inserisce un abbonato senza flaggare 'Pagato' ma mettendo metodo di pagamento = Contati o Carta
 
 - Controllare numero biglietto fisico e campaign_year su u duplicato
+
+-IDEA quando viene aggiunto un abbonato con pagato non flaggato allora la sezione metodo di pagamento viene segnata come non pagato
