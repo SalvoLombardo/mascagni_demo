@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Ricerca Abbonato</h2>
+    <p>Inserisci nome e cognome dell'abbonato inserito da te per visualizzarlo e fare delle modifiche</p>
+    <hr>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.subscriber_first_name.label }} {{ form.subscriber_first_name() }}<br>
+        {{ form.subscriber_last_name.label }} {{ form.subscriber_last_name() }}<br>
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

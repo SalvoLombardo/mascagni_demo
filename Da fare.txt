@@ -1,0 +1,39 @@
+Da sistemare
+
+
+Auth BP
+- Da sistemare la parte di login admin
+- Studiare Bootstraps
+- (FATTO) Sistemare uppercase nel salvataggio di un untente e nella ricerca 
+- Capire come gestire la durata del login
+- Inserimento lista abbonati e altri elenchi in tabelle
+- Controlla che se si aggiunge un vcchio abbonato con nuova subscription non si sovrascriva. Qualcosa come controllare se 
+esiste una sub con l'anno corrende associata al suo id
+- Capire come funziona la questione di conversione ad excel e controlla perchè c'è una colonna in più nel file scaricato
+- Uppercase anche su ricerca def search_subscriber_by_operator()
+- Controlli stripe,rstripe(FATTO???)
+
+- Continuare edit subscriber by operator
+
+Admin BP
+-Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)
+
+
+New features
+
+URGENTE
+- Aggiorna physical ticket is available
+- Elimina tutti gli abbonati creati e aggiorna capitalize
+
+
+
+
+
+IN SOSPESO
+
+-   aggiornare numero di assegnazione abbonamento fisico su add subscriber
+
+-   controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
+
+
+- Controllare cosa succede se si inserisce un abbonato senza flaggare 'Pagato' ma mettendo metodo di pagamento = Contati o Carta

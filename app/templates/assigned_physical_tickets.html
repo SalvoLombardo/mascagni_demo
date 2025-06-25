@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Main Operator{% endblock %}
+
+{% block content %}
+
+<h2>Assegna abbonamenti</h2>
+
+<form method="POST" action="{{ url_for('admin.assigned_physical_tickets', operator_id=operator_id) }}">
+    {{ form.hidden_tag() }}
+
+    <p>{{ form.from1.label }}<br>
+    {{ form.from1() }}</p>
+
+    <p>{{ form.to1.label }}<br>
+    {{ form.to1() }}</p>
+
+    <p>{{ form.from2.label }}<br>
+    {{ form.from2() }}</p>
+
+    <p>{{ form.to2.label }}<br>
+    {{ form.to2() }}</p>
+
+    <hr>
+
+    <p>{{ form.single_ticket1.label }}<br>
+    {{ form.single_ticket1() }}</p>
+
+    <p>{{ form.single_ticket2.label }}<br>
+    {{ form.single_ticket2() }}</p>
+
+    <p>{{ form.single_ticket3.label }}<br>
+    {{ form.single_ticket3() }}</p>
+
+    <p>{{ form.single_ticket4.label }}<br>
+    {{ form.single_ticket4() }}</p>
+
+    <p>{{ form.single_ticket5.label }}<br>
+    {{ form.single_ticket5() }}</p>
+
+    <p>{{ form.single_ticket6.label }}<br>
+    {{ form.single_ticket6() }}</p>
+
+    <p>{{ form.single_ticket7.label }}<br>
+    {{ form.single_ticket7() }}</p>
+
+    <p>{{ form.single_ticket8.label }}<br>
+    {{ form.single_ticket8() }}</p>
+
+    <p>{{ form.submit() }}</p>
+</form>
+
+{% endblock %}

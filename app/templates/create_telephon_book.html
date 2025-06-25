@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Rubrica Telefonica {% endblock %}
+
+{% block content %}
+<h3>Rubrica Telefonica</h3>
+
+
+
+<br>
+
+<table border="1">
+  <thead>
+    <tr>
+      {% for h in headers %}
+        <th>{{ h }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for element in formatted_subscribers %}
+      <tr>
+        <td>{{ element }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Iscritti {{ year }}</h2>
+<form method="GET" action="{{ url_for('admin.download_excel') }}">
+    <button type="submit" class="btn btn-primary">Scarica come Excel</button>
+</form>
+
+{% endblock %}
+
+

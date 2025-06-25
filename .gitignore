@@ -1,0 +1,26 @@
+# Ambiente virtuale
+venv/
+
+# File di cache Python
+__pycache__/
+*.py[cod]
+
+# Database locali (se usi SQLite temporaneamente)
+*.sqlite3
+
+# File di log
+*.log
+
+# Configurazioni locali/segreti (da escludere se li usi)
+.env
+
+# Cartelle di Flask-Migrate
+migrations/versions/
+
+# Cartelle editor
+.vscode/
+.idea/
+
+# File sistema operativo
+.DS_Store
+Thumbs.db

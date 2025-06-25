@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Aggiungi un abbonato</h2>
+    <p>Inserisci i seguenti campi per accedere alla tua area</p>
+    <hr>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        {{ form.first_name.label }} {{ form.first_name() }}<br>
+        {{ form.last_name.label }} {{ form.last_name() }}<br>
+        {{ form.phone_number.label }} {{ form.phone_number() }}<br>
+        {{ form.note.label }} {{ form.note() }}<br>
+    
+        {{ form.is_paid.label }} {{ form.is_paid() }}<br>
+        {{ form.payment_method.label }} {{ form.payment_method() }}<br>
+        {{ form.subscription_note.label }} {{ form.subscription_note() }}<br>
+        {{ form.ticket_id.label }} {{ form.ticket_id(class_="select-style") }}<br>
+        
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

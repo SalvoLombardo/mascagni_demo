@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Chi deve pagare {% endblock %}
+
+{% block content %}
+<h3>Ciao Operatore, questi sono gli abbonamenti da pagare</h3>
+<p>Puoi confermare il pagamento cliccando il bottone accanto al nome:</p>
+
+{% for sub in subscriptions %}
+  <div class="mb-3">
+    <strong>Nome e Cognome: {{ sub.subscriber.subscriber_first_name }} {{ sub.subscriber.subscriber_last_name }}</strong><br><br>
+
+    <!-- Bottone che apre il modal -->
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmModal{{ sub.subscription_id }}">
+      Conferma pagamento
+    </button>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="confirmModal{{ sub.subscription_id }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ sub.subscription_id }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalLabel{{ sub.subscription_id }}">Conferma pagamento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+          </div>
+
+          <div class="modal-body">
+            Sei sicuro di voler confermare il pagamento per {{ sub.subscriber.subscriber_first_name }} {{ sub.subscriber.subscriber_last_name }}?
+          </div>
+
+          <div class="modal-footer">
+            <form method="POST">
+              {{ form.hidden_tag() }}   <!-- CSRF e altri hidden fields automatici -->
+
+              <input type="hidden" name="subscription_id" value="{{ sub.subscription_id }}">
+
+              <!-- Campo select per il metodo di pagamento -->
+              {{ form.payment_method.label }}
+              {{ form.payment_method(class="form-select") }}
+
+              <button type="submit" class="btn btn-primary mt-2">Sì, conferma</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock %}

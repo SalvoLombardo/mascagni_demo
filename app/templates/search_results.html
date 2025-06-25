@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Chi deve pagare {% endblock %}
+
+{% block content %}
+<h3>Risultati della ricerca</h3>
+
+<ul>
+    {% for sub in result %}
+        <li>
+            {{ sub.subscriber_first_name }} 
+            {{ sub.subscriber_last_name }} 
+
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

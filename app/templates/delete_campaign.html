@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Main Operator{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div>
+      {{ form.year.label }} {{ form.year() }}
+  </div>
+  <div>
+      {{ form.submit() }}
+  </div>
+</form>
+{% endblock %}

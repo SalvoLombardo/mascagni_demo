@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Seleziona l'abbonato che vuoi eliminare</h3>
+<p>Questa operazione è irreversibile.</p>
+
+{% for sub in subscribers %}
+    <div class="mb-3 border p-2">
+        <strong>{{ sub.subscriber_first_name }} {{ sub.subscriber_last_name }}</strong><br>
+        <em>{{ sub.subscriber_note }}</em><br>
+
+        <form action="{{ url_for('admin.confirm_delete_subscriber') }}" method="POST">
+            {{ delete_form.csrf_token }}
+            <input type="hidden" name="subscriber_id" value="{{ sub.subscriber_id }}">
+            <button type="submit" class="btn btn-danger">Elimina questo utente</button>
+        </form>
+    </div>
+{% endfor %}
+{% endblock %}

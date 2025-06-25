@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Successo{% endblock %}
+
+{% block content %}
+    <h2>Successo</h2>
+    <p>
+        Ben fatto 
+    </p>    
+
+    
+        <a href="{{ url_for('auth.main_operator') }}">Torna alla tua Home</a>
+    
+{% endblock %}

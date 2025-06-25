@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Tutti gli abbonati per anno {% endblock %}
+
+{% block content %}
+<h3>Ecco tutti gli abbonati</h3>
+<table border="1">
+    <thead>
+      <tr>
+        {% for h in headers %}
+          <th>{{ h }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in subscribers %}
+        <tr>
+          {% for cell in row %}
+            <td>{{ cell }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Iscritti {{ year }}</h2>
+
+<form method="POST">
+  <button type="submit" class="btn btn-primary"> Scarica Excel</button>
+</form>
+
+{% endblock %}
+
+

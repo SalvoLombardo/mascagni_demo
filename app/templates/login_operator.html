@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Benvenuto nel Login</h2>
+    <p>Inserisci i seguenti campi per accedere alla tua area</p>
+    <hr>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.username.label }} {{ form.username() }}<br>
+        {{ form.password.label }} {{ form.password() }}<br>
+        {{ form.submit() }}
+    </form>
+
+{% endblock %}

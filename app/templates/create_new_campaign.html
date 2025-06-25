@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Qui puoi creare la nuova campagna abbonamenti</h2>
+    
+    <hr>
+    <form method="POST" action="{{ url_for('admin.create_new_campaign') }}">
+        {{ form.hidden_tag() }}
+        <button type="submit" class="btn btn-primary">Crea campagna</button>
+    </form>
+    <br>
+{% endblock %}
+

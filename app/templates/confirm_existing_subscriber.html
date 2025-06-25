@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Abbonato esistente{% endblock %}
+
+{% block content %}
+
+<h3>Esiste già uno o più abbonati con lo stesso nome e cognome</h3>
+<ul>
+    {% for sub in existing %}
+        <li>
+            {{ sub.subscriber_first_name }} {{ sub.subscriber_last_name }} - Tel: {{ sub.subscriber_phone_number }}<br>
+            Note: {{ sub.subscriber_note }}
+
+
+            <form method="POST" action="{{ url_for('auth.confirm_existing_subscriber', subscriber_id=sub.subscriber_id) }}">
+                {{ form.hidden_tag() }}
+                <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+                <button type="submit" name="action" value="add_year">È questa persona – </button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<form method="POST" action="{{ url_for('auth.add_subscriber_confirm') }}">
+    {{ form.hidden_tag() }}
+    <button type="submit" name="submit">Non è nessuno di questi – </button>
+</form>
+
+
+{% endblock %}

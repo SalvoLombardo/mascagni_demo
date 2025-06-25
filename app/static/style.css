@@ -1,0 +1,102 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0ece6;  
+    color: #333;
+}
+
+header {
+    background-color: #1b1d38;
+    color: #aa8779;
+    padding: 1rem;
+    text-align: center;
+}
+
+
+nav a {
+    margin: 0 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+    background-color: #fbf7f3;
+}
+
+hr {
+    margin-top: 1rem;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+select.select-style {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dashboard-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+    
+    
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #09325e; /* blu */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn.danger {
+    background-color: #dc3545; /* rosso */
+}
+
+.btn.danger:hover {
+    background-color: #a71d2a;
+}
+
+.admin-section {
+    text-align: right;
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.btn-custom {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #007bff; /* blu */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+  
+.btn-custom:hover {
+    background-color: #0056b3;
+}
+

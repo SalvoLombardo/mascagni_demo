@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Chi deve pagare {% endblock %}
+
+{% block content %}
+<h3>Ecco chi deve pagare</h3>
+<ul>
+    {% for sub in subscriptions %}
+        <li>
+            {{ sub.subscriber.subscriber_first_name }} 
+            {{ sub.subscriber.subscriber_last_name }} 
+
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+

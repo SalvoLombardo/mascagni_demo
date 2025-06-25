@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Main Admin{% endblock %}
+
+{% block content %}
+<h2>Benvenuto Admin nella tua dashboard personale!</h2>
+
+<div class="dashboard-section">
+    <h3>Gestione campagna abbonamenti</h3>
+    <div class="dashboard-buttons">
+        <a class="btn btn-primary" href="{{ url_for('admin.create_new_campaign') }}"> Crea una nuova campagna abbonamenti</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.choose_operator_for_assign') }}"> Assegna i biglietti agli operatori</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.view_assigned_tickets') }}"> Visualizza i biglietti assegnati</a>
+        <a class="btn btn-primary" href="{{ url_for('admin.create_telephon_book') }}"> Crea la rubrica telefonica </a>
+    </div>
+</div>
+
+<hr>
+
+<div class="dashboard-section">
+    <h3>Azioni critiche</h3>
+    <div class="dashboard-buttons">
+        <a class="btn danger" href="{{ url_for('admin.search_who_delete') }}"> Elimina definitivamente un abbonato</a>
+        <a class="btn danger" href="{{ url_for('admin.delete_campaign') }}">Elimina definitivamente una campagna abbonamenti</a>
+    </div>
+</div>
+{% endblock %}

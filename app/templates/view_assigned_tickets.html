@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Biglietti assegnati - {{ year }}{% endblock %}
+
+{% block content %}
+<h2>Biglietti fisici assegnati - {{ year }}</h2>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Numero biglietto</th>
+            <th>ID Operatore</th>
+            <th>Stato</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.physical_ticket_number }}</td>
+            <td>{{ ticket.assigned_to_operator_id if ticket.assigned_to_operator_id else "—" }}</td>
+            <td>
+                {% if ticket.assigned_to_operator_id is none %}
+                    Non assegnato
+                {% elif ticket.physical_ticket_is_available %}
+                    Assegnato (non ancora venduto)
+                {% else %}
+                    Venduto
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if tickets|length == 0 %}
+<p>Nessun biglietto trovato per l'anno {{ year }}.</p>
+{% endif %}
+{% endblock %}

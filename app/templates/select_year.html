@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Main Operator{% endblock %}
+
+{% block content %}
+
+<form action="{{ url_for('auth.select_year') }}" method="POST">
+    <label for="year">Seleziona anno:</label>
+    <input type="number" id="year" name="year" min="2020" max="2040" required>
+    <button type="submit">Vai</button>
+  </form>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Main Operator{% endblock %}
+
+{% block content %}
+    <h2>Benvenuto nella tua dashboard personale!</h2>
+    <p>
+        Ciao {{operator.operator_first_name|capitalize }}
+    </p>    
+        <a href="{{ url_for('auth.add_subscriber') }}"class="btn btn-primary">Aggiungi un nuovo abbonato</a>
+        <br>
+        <br>
+        <a href="{{ url_for('auth.who_needs_to_pay') }}"class="btn btn-primary">Controlla tutti quelli che devono pagare</a>
+        <br>
+        <br>
+        <a href="{{ url_for('auth.updating_paying_situation') }}"class="btn btn-primary">Aggiorna lo stato del pagamento del tuo abbonato</a>  
+        <br>
+        <br>
+        <a href="{{ url_for('auth.select_year') }}"class="btn btn-primary">Visualizza Abbonati per anno</a> 
+        <br>
+        <br>
+        <a href="{{ url_for('auth.search_subscriber_by_operator') }}"class="btn btn-primary">Visualizza/modifica abbonati inseriti da te</a> 
+{% endblock %}
