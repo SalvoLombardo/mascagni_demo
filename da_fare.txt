@@ -12,32 +12,25 @@ esiste una sub con l'anno corrende associata al suo id
 - Capire come funziona la questione di conversione ad excel e controlla perchè c'è una colonna in più nel file scaricato
 - Uppercase anche su ricerca def search_subscriber_by_operator()
 - Controlli stripe,rstripe(FATTO???)
-
 - Continuare edit subscriber by operator
+
+-REFACTORING DI AUTH/UTILS save_new_subscriber_and_subscription SU SUBSCRIBER SERVICE(CREDO VADA QUI ?? )
+-REFACTORING di auth.updating_paying_situation
+
+
+
 
 Admin BP
 -Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)
 
-
-New features
-
-URGENTE
-- Aggiorna physical ticket is available
-- Elimina tutti gli abbonati creati e aggiorna capitalize
 
 
 
 
 
 IN SOSPESO
-
--   aggiornare numero di assegnazione abbonamento fisico su add subscriber
-
 -   controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
 
-
 - Controllare cosa succede se si inserisce un abbonato senza flaggare 'Pagato' ma mettendo metodo di pagamento = Contati o Carta
-
-
 
 - Controllare numero biglietto fisico e campaign_year su u duplicato
