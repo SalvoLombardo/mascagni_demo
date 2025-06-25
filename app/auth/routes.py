@@ -128,18 +128,20 @@ def add_subscriber_confirm():
     is_new_subscriber=True
 
     if data:
-        save_new_subscriber_and_subscription(data,is_new_subscriber)
-        flash('Nuovo abbonato aggiunto con successo')
+        
+        succes=save_new_subscriber_and_subscription(data,is_new_subscriber)
+        if succes:
+            flash('Nuovo abbonato aggiunto con successo')
+        else:
+            flash('Attenzione questo abbonato risulta avere una inscrizione alla stagione corrente ')
+            return redirect (url_for('auth.main_operator'))
+    
     else:
-        flash('Errore: nessun dato presente')
+        flash('Errore: Qualcosa è andato storto, nessun dato presente, riprova')
 
     return redirect(url_for('auth.success_page'))
 
-@auth_bp.route('/main_operator/add_subscriber/confirm/success_page')
-@login_required
-def success_page():
-    return render_template('success_page.html')
-    
+ 
 @auth_bp.route('/main_operator/add_subscriber/confirm_existing_subscriber/<int:subscriber_id>', methods=['POST'])
 @login_required 
 def confirm_existing_subscriber(subscriber_id):
@@ -151,13 +153,23 @@ def confirm_existing_subscriber(subscriber_id):
         return redirect(url_for('auth.add_subscriber'))
     
     data['existing_subscriber_id']=subscriber_id
-    save_new_subscriber_and_subscription(data,is_new_subscriber)
+    success = save_new_subscriber_and_subscription(data, is_new_subscriber)
+    if success:
+        flash('Vecchio abbonato inserito nella nuova stagione concertistica', 'success')
+        return redirect(url_for('auth.success_page'))
+    else:
+        flash("Abbonato già iscritto per l’anno corrente", "warning")
+        return redirect(url_for('auth.main_operator'))
 
     flash('Vecchio abbonato inserito nella nuova stagione concertistica', 'success')
     return render_template('success_page.html')
 
 
-
+@auth_bp.route('/main_operator/add_subscriber/confirm/success_page')
+@login_required
+def success_page():
+    return render_template('success_page.html')
+   
 
 
 
