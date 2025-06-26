@@ -134,3 +134,12 @@ class AssignPhysicalTickets(FlaskForm):
     
     submit = SubmitField('Invio')
     
+class SubscriberInfoForm(FlaskForm):
+    subscriber_first_name= StringField('Nome',validators=[DataRequired()])
+    subscriber_last_name= StringField('Cognome',validators=[DataRequired()])
+    subscriber_phone_number= StringField('Telefono')
+    subscriber_note= TextAreaField('Note')
+    ticket_id=StringField("Abbonamento attuale", render_kw={"readonly": True})
+    new_physical_ticket_number= SelectField('Seleziona numero di abbonamento nuovo', coerce=int, validators=[DataRequired(message="Seleziona un ticket")])
+
+    submit= SubmitField('Aggiorna abbonato')

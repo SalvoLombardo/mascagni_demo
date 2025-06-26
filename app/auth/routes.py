@@ -8,7 +8,7 @@ from datetime import datetime
 from app.models import Operator,Subscriber,SubscriptionCampaign,Subscription,PhysicalTicket
 
 #FLASK FORM
-from app.forms import OperatorSignupForm, OperatorLoginForm, AddSubscriberForm ,ConfirmExistingOrNotForm ,UpdatePaymentStatusForm ,UpdatingPaymentMethodForm ,SearchSubscriberForm
+from app.forms import OperatorSignupForm, OperatorLoginForm, AddSubscriberForm ,ConfirmExistingOrNotForm ,UpdatePaymentStatusForm ,UpdatingPaymentMethodForm ,SearchSubscriberForm,SubscriberInfoForm
 
 #REFACTORY SECTION - SERVICE IMPORT
 from app.service import subscriber_service as subscriber_service
@@ -256,7 +256,9 @@ def view_all_subscribers_by_year(selected_year):
 
 
 
-
+#####################################################################
+########################     EDIT SUBSCRIBER   ######################
+#################              SECTION             ##################
 @auth_bp.route('/main_operator/search_subscriber_by_operator', methods=['GET','POST'])
 @login_required
 def search_subscriber_by_operator():
@@ -269,9 +271,50 @@ def search_subscriber_by_operator():
 
         result = subscriber_service.find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id)
 
-        return render_template('search_results.html',result=result)
+        return render_template('search_results.html',result=result,form=form)
 
     return render_template('search_subscriber_by_operator.html', form=form)
 
+@auth_bp.route('/main_operator/edit_subscriber/<int:subscriber_id>', methods=['GET', 'POST'])
+@login_required
+def edit_subscriber(subscriber_id):
+    subscriber_and_current_ticket = subscriber_service.get_subscriber_and_current_physical_ticket(subscriber_id)
 
+    if not subscriber_and_current_ticket:
+        flash('Errore: abbonato non trovato o sprovvisto di ticket per quest anno')
+        return redirect(url_for('auth.main_operator'))
 
+    (
+        subscriber_first_name,
+        subscriber_last_name,
+        subscriber_phone_number,
+        subscriber_first_note,
+        current_ticket_number,
+        current_ticket_id,
+    ) = subscriber_and_current_ticket
+    
+    form = SubscriberInfoForm()
+    print('Valori assegnati:')
+    print('Nome:', subscriber_first_name)
+    print('Cognome:', subscriber_last_name)
+    print('Telefono:', subscriber_phone_number)
+    print('Note:', subscriber_first_note)
+
+    available_tickets_for_operator = subscriber_service.get_available_tickets_for_operator(current_user.operator_id)
+    form.new_physical_ticket_number.choices = [
+        (t.physical_ticket_id, f"Biglietto n° {t.physical_ticket_number}")
+        for t in available_tickets_for_operator
+    ]
+
+    if request.method == 'GET':
+        print('ciaoooooooasodoasdoasdoasd')
+        form.subscriber_first_name.data = subscriber_first_name
+        form.subscriber_last_name.data = subscriber_last_name
+        form.subscriber_phone_number.data = subscriber_phone_number  
+        form.subscriber_note.data = subscriber_first_note
+        form.ticket_id.data = f"Biglietto nummmero: {current_ticket_number}"
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template('edit_subscriber.html', form=form)

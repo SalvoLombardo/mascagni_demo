@@ -97,7 +97,6 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
         return False
     
 
-
 def get_subscriber_not_paid_by_operator(operator_id: int):
     return Subscription.query.join(PhysicalTicket).filter(
         Subscription.subscription_is_paid == False,
@@ -107,7 +106,9 @@ def get_subscriber_not_paid_by_operator(operator_id: int):
 
 def find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id):
 
+
     return db.session.query(
+            Subscriber.subscriber_id,
             Subscriber.subscriber_first_name,
             Subscriber.subscriber_last_name,
             PhysicalTicket.physical_ticket_number
@@ -122,3 +123,21 @@ def find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,opera
             SubscriptionCampaign.campaign_year == datetime.now().year
         )\
         .all()
+
+def get_subscriber_and_current_physical_ticket(subscriber_id):
+    return db.session.query(
+        Subscriber.subscriber_first_name,
+        Subscriber.subscriber_last_name,
+        Subscriber.subscriber_phone_number,
+        Subscriber.subscriber_note,
+        PhysicalTicket.physical_ticket_number,
+        PhysicalTicket.physical_ticket_id  
+    )\
+    .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
+    .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
+    .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
+    .filter(
+        Subscriber.subscriber_id == subscriber_id,
+        SubscriptionCampaign.campaign_year == datetime.now().year
+    )\
+    .first()

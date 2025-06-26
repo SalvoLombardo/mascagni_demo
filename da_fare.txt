@@ -8,44 +8,21 @@ Auth BP
 - Inserimento lista abbonati e altri elenchi in tabelle
 - Capire come funziona la questione di conversione ad excel e controlla perchè c'è una colonna in più nel file scaricato
 - Uppercase anche su ricerca def search_subscriber_by_operator()
-- 
 - Continuare edit subscriber by operator
 
--REFACTORING DI AUTH/UTILS save_new_subscriber_and_subscription SU SUBSCRIBER SERVICE(CREDO VADA QUI ?? )
--REFACTORING di auth.updating_paying_situation
-
-
-
-
 Admin BP
--Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)
-
-
-
-
+-Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)(FATTO??????????)
 
 
 IN SOSPESO
--   controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
-
-- Controllare cosa succede se si inserisce un abbonato senza flaggare 'Pagato' ma mettendo metodo di pagamento = Contati o Carta
+- Controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
 
 - Controllare numero biglietto fisico e campaign_year su u duplicato
 
-- IDEA quando viene aggiunto un abbonato con pagato non flaggato allora la sezione metodo di pagamento viene segnata come non pagato
 
 
 
 
 
 
- new_subscription= Subscription( 
-            subscription_is_paid=data.get('is_paid', False),
-            subscription_payment_method=data.get('payment_method', None),
-            subscription_note=data.get('subscription_note', ''),
-            physical_ticket_id=data['ticket_id'],
-            subscriber_id=subscriber_id, # so this variable depends on result of the previous situation 
-            campaign_id=data['campaign_id'],
-            operator_id=data['operator_id'],
-            subscription_assigned_at=data['subscription_assigned_at']
-        )
+

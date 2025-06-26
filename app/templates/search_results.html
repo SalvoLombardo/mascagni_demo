@@ -10,6 +10,11 @@
         <li>
             {{ sub.subscriber_first_name }} 
             {{ sub.subscriber_last_name }} 
+            <form method="GET" action="{{ url_for('auth.edit_subscriber', subscriber_id=sub.subscriber_id) }}">
+                {{ form.hidden_tag() }}
+                <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+                <button type="submit" name="action" value="add_year">Modifica questo abbonato – </button>
+            </form>
 
         </li>
     {% endfor %}
