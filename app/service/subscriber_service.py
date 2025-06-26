@@ -104,3 +104,21 @@ def get_subscriber_not_paid_by_operator(operator_id: int):
         PhysicalTicket.physical_ticket_is_available == False,
         Subscription.operator_id == operator_id
     ).all()
+
+def find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id):
+
+    return db.session.query(
+            Subscriber.subscriber_first_name,
+            Subscriber.subscriber_last_name,
+            PhysicalTicket.physical_ticket_number
+        )\
+        .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
+        .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
+        .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
+        .filter(
+            Subscriber.subscriber_first_name == subscriber_first_name,
+            Subscriber.subscriber_last_name == subscriber_last_name,
+            Subscription.operator_id == operator_id,
+            SubscriptionCampaign.campaign_year == datetime.now().year
+        )\
+        .all()

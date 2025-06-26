@@ -265,25 +265,11 @@ def search_subscriber_by_operator():
     if form.validate_on_submit():
         subscriber_first_name = form.subscriber_first_name.data.strip().capitalize()
         subscriber_last_name=form.subscriber_last_name.data.strip().capitalize()
+        operator_id=current_user.operator_id
 
-        result = db.session.query(
-            Subscriber.subscriber_first_name,
-            Subscriber.subscriber_last_name,
-            PhysicalTicket.physical_ticket_number
-        )\
-        .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
-        .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
-        .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
-        .filter(
-            Subscriber.subscriber_first_name == subscriber_first_name,
-            Subscriber.subscriber_last_name == subscriber_last_name,
-            Subscription.operator_id == current_user.operator_id,
-            SubscriptionCampaign.campaign_year == datetime.now().year
-        )\
-        .all()
+        result = subscriber_service.find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id)
 
         return render_template('search_results.html',result=result)
-
 
     return render_template('search_subscriber_by_operator.html', form=form)
 
