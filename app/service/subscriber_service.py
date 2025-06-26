@@ -22,7 +22,7 @@ def build_pending_subscribers_data(form, operator_id, campaign_id):#passing oper
     return {
                 'first_name': form.first_name.data.strip().capitalize(),#Pass the data direct trough the form "form = AddSubscriberForm()""
                 'last_name': form.last_name.data.strip().capitalize(),
-                'phone_number': form.phone_number.data.strip(),
+                'phone_number': form.phone_number.data.replace(" ",""),
                 'note': form.note.data,
                 'is_paid': form.is_paid.data,
                 'payment_method': form.payment_method.data,

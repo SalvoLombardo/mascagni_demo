@@ -15,7 +15,7 @@ from app.service import subscriber_service as subscriber_service
 from app.service import subscription_service as subscription_service
 from app.exporter import subscriber_exporter as exp_service
 
-#from .utils import save_new_subscriber_and_subscription
+
 
 auth_bp= Blueprint('auth', __name__)
 

@@ -4,14 +4,11 @@ Da sistemare
 Auth BP
 - Da sistemare la parte di login admin
 - Studiare Bootstraps
-- (FATTO) Sistemare uppercase nel salvataggio di un untente e nella ricerca 
 - Capire come gestire la durata del login
 - Inserimento lista abbonati e altri elenchi in tabelle
-- Controlla che se si aggiunge un vcchio abbonato con nuova subscription non si sovrascriva. Qualcosa come controllare se 
-esiste una sub con l'anno corrende associata al suo id
 - Capire come funziona la questione di conversione ad excel e controlla perchè c'è una colonna in più nel file scaricato
 - Uppercase anche su ricerca def search_subscriber_by_operator()
-- Controlli stripe,rstripe(FATTO???)
+- 
 - Continuare edit subscriber by operator
 
 -REFACTORING DI AUTH/UTILS save_new_subscriber_and_subscription SU SUBSCRIBER SERVICE(CREDO VADA QUI ?? )
