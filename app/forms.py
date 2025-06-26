@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField,SelectField,IntegerField
+from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField,SelectField,IntegerField,ValidationError
 from wtforms.validators import DataRequired,NumberRange,Optional
 
 class OperatorSignupForm(FlaskForm):
@@ -27,7 +27,7 @@ class AddSubscriberForm(FlaskForm):
     payment_method = SelectField('Metodo di pagamento', choices=[
         ('contanti', 'Contanti'),
         ('bonifico', 'Bonifico'),
-        ('non pagato', 'Non Ancora Pagato'),
+        ('non_pagato', 'Non Ancora Pagato'),
     ])
     subscription_note = TextAreaField('Note iscrizione')
 
@@ -36,6 +36,22 @@ class AddSubscriberForm(FlaskForm):
 
     submit = SubmitField('Aggiungi')
 
+
+
+    #with the function down below i make sure that if the operator doesn't select the is_paid flag but
+    #leaves the next field (payment method) in 'Cash o  wire transfer', it will be converted automatically 
+    #in 'not paid'
+    #and if the operator try to save a subscriber who had paid it will raise Valitation Error, which stops the operation
+    #and wait the operator that change his choise in another method
+    def validate_payment_method(self, field): 
+        if self.is_paid.data:
+            if field.data == 'non_pagato' or not field.data:
+                raise ValidationError(
+                    "Hai indicato che è stato pagato, ma non hai scelto un metodo di pagamento valido."
+                )
+        else:
+            
+            field.data = 'non_pagato'
 
 
 

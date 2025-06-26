@@ -3,7 +3,7 @@ from flask import session,flash
 from app.extension import db
 from app.models import (Subscriber, Subscription,SubscriptionCampaign,PhysicalTicket, Operator)
 from sqlalchemy import exists, and_
-
+from wtforms import ValidationError
 def get_available_tickets_for_operator(operator_id):
     return PhysicalTicket.query.filter(
             PhysicalTicket.physical_ticket_is_available == True,
@@ -48,6 +48,7 @@ def get_subscription_this_year(subscriber_id :int): #This gives me a boolean res
 def save_new_subscriber_and_subscription(data, is_new_subscriber):
     
     if is_new_subscriber:
+        
         #I use the boolean variable is_new_subscriber to create a diffrent way to add an existing subscriber
         #with a new subscription
         #and an already subscriber with a new subscription
@@ -66,13 +67,11 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
     else:
         subscriber_id= data['existing_subscriber_id']# but the id in this case is different beacuse it already exist
 
-
-
-
-
+    
     is_subscribed_this_year=get_subscription_this_year(subscriber_id)
 
     if not is_subscribed_this_year:
+        
         new_subscription= Subscription( 
             subscription_is_paid=data.get('is_paid', False),
             subscription_payment_method=data.get('payment_method', None),
@@ -83,14 +82,15 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
             operator_id=data['operator_id'],
             subscription_assigned_at=data['subscription_assigned_at']
         )
+        
         db.session.add(new_subscription)
 
-        
         physical_ticket = PhysicalTicket.query.get(data['ticket_id'])
         
         physical_ticket.physical_ticket_is_available = False
 
         db.session.commit()
+        return True
     
     else:
         flash("Abbonato già iscritto per l’anno corrente", "warning")

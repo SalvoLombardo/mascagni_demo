@@ -35,4 +35,20 @@ IN SOSPESO
 
 - Controllare numero biglietto fisico e campaign_year su u duplicato
 
--IDEA quando viene aggiunto un abbonato con pagato non flaggato allora la sezione metodo di pagamento viene segnata come non pagato
+- IDEA quando viene aggiunto un abbonato con pagato non flaggato allora la sezione metodo di pagamento viene segnata come non pagato
+
+
+
+
+
+
+ new_subscription= Subscription( 
+            subscription_is_paid=data.get('is_paid', False),
+            subscription_payment_method=data.get('payment_method', None),
+            subscription_note=data.get('subscription_note', ''),
+            physical_ticket_id=data['ticket_id'],
+            subscriber_id=subscriber_id, # so this variable depends on result of the previous situation 
+            campaign_id=data['campaign_id'],
+            operator_id=data['operator_id'],
+            subscription_assigned_at=data['subscription_assigned_at']
+        )

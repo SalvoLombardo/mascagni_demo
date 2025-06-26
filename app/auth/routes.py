@@ -115,6 +115,9 @@ def add_subscriber():
         else:
             return redirect(url_for('auth.add_subscriber_confirm'))
         
+    if request.method == "POST": #Section to show errors
+        flash("Correggi gli errori evidenziati e riprova.", "warning")
+        
     return render_template('add_subscriber.html', form=form)
 
 @auth_bp.route('/main_operator/add_subscriber/confirm', methods=['GET', 'POST'])
@@ -130,6 +133,7 @@ def add_subscriber_confirm():
         if succes:
             flash('Nuovo abbonato aggiunto con successo')
         else:
+            
             flash('Attenzione questo abbonato risulta avere una inscrizione alla stagione corrente ')
             return redirect (url_for('auth.main_operator'))
     
