@@ -95,3 +95,12 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
     else:
         flash("Abbonato già iscritto per l’anno corrente", "warning")
         return False
+    
+
+
+def get_subscriber_not_paid_by_operator(operator_id: int):
+    return Subscription.query.join(PhysicalTicket).filter(
+        Subscription.subscription_is_paid == False,
+        PhysicalTicket.physical_ticket_is_available == False,
+        Subscription.operator_id == operator_id
+    ).all()

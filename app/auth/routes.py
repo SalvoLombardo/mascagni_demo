@@ -179,9 +179,6 @@ def success_page():
 @auth_bp.route('/main_operator/who_needs_to_pay', methods=['GET', 'POST'])
 @login_required
 def who_needs_to_pay():
-
-    
-
     subscriptions = Subscription.query\
     .join(PhysicalTicket)\
     .join(Subscriber)\
@@ -205,11 +202,7 @@ def updating_paying_situation():
         db.session.commit()
         return redirect(url_for('auth.main_operator'))
 
-    subscriptions = Subscription.query.join(PhysicalTicket).filter(
-        Subscription.subscription_is_paid == False,
-        PhysicalTicket.physical_ticket_is_available == False,
-        Subscription.operator_id == current_user.operator_id
-    ).all()
+    subscriptions = subscriber_service.get_subscriber_not_paid_by_operator(current_user.operator_id)
 
     return render_template('updating_paying_situation.html', subscriptions=subscriptions, form=form)
 
