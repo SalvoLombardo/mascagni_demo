@@ -294,20 +294,23 @@ def edit_subscriber(subscriber_id):
     ) = subscriber_and_current_ticket
     
     form = SubscriberInfoForm()
-    print('Valori assegnati:')
-    print('Nome:', subscriber_first_name)
-    print('Cognome:', subscriber_last_name)
-    print('Telefono:', subscriber_phone_number)
-    print('Note:', subscriber_first_note)
+    
 
     available_tickets_for_operator = subscriber_service.get_available_tickets_for_operator(current_user.operator_id)
-    form.new_physical_ticket_number.choices = [
+    
+    choices = [
+        (current_ticket_id, f"Biglietto n° {current_ticket_number} (attuale)")
+    ] + [
         (t.physical_ticket_id, f"Biglietto n° {t.physical_ticket_number}")
         for t in available_tickets_for_operator
+        if t.physical_ticket_id != current_ticket_id          
     ]
 
+
+    form.new_physical_ticket_number.choices = choices
+
     if request.method == 'GET':
-        print('ciaoooooooasodoasdoasdoasd')
+        #Populating the flaskform
         form.subscriber_first_name.data = subscriber_first_name
         form.subscriber_last_name.data = subscriber_last_name
         form.subscriber_phone_number.data = subscriber_phone_number  
@@ -315,6 +318,38 @@ def edit_subscriber(subscriber_id):
         form.ticket_id.data = f"Biglietto nummmero: {current_ticket_number}"
 
     if form.validate_on_submit():
-        pass
+        #POST SECTION
+
+        new_ticket_id = form.new_physical_ticket_number.data #First i'm getting the new ticket id to compare with the old one 
+                                                             #in this way i can skip some code if the new id is the same with the old id
+        #UPDATING subscriber
+        subscriber=Subscriber.query.get_or_404(subscriber_id)
+        subscriber.subscriber_first_name=form.subscriber_first_name.data
+        subscriber.subscriber_last_name=form.subscriber_last_name.data
+        subscriber.subscriber_phone_number=form.subscriber_phone_number.data
+        subscriber.subscriber_note=form.subscriber_note.data
+
+        if new_ticket_id!= current_ticket_id:
+            #UPDATING old ticket
+            old_ticket=PhysicalTicket.query.get_or_404(current_ticket_id)
+            old_ticket.physical_ticket_is_available=True
+
+            #UPDATING new ticket
+            new_physical_ticket=PhysicalTicket.query.get_or_404(new_ticket_id)
+            new_physical_ticket.physical_ticket_is_available=False
+
+            #UPDATING the subscription
+            subscription=(Subscription.query.filter_by(subscriber_id=subscriber_id,
+                                                       campaign_id=new_physical_ticket.campaign_id,
+                                                       physical_ticket_id=current_ticket_id)).first_or_404()
+            subscription.physical_ticket_id=new_ticket_id
+
+        db.session.commit()
+        flash('Abbonato aggiornato!')
+        return redirect(url_for('auth.main_operator'))
+        
 
     return render_template('edit_subscriber.html', form=form)
+
+
+
