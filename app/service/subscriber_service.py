@@ -105,24 +105,39 @@ def get_subscriber_not_paid_by_operator(operator_id: int):
     ).all()
 
 def find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id):
+    if operator_id is not None:#if operator_id=None means he's an Admin so we can search every subscriber 
 
-
-    return db.session.query(
-            Subscriber.subscriber_id,
-            Subscriber.subscriber_first_name,
-            Subscriber.subscriber_last_name,
-            PhysicalTicket.physical_ticket_number
-        )\
-        .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
-        .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
-        .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
-        .filter(
-            Subscriber.subscriber_first_name == subscriber_first_name,
-            Subscriber.subscriber_last_name == subscriber_last_name,
-            Subscription.operator_id == operator_id,
-            SubscriptionCampaign.campaign_year == datetime.now().year
-        )\
-        .all()
+        return db.session.query(
+                Subscriber.subscriber_id,
+                Subscriber.subscriber_first_name,
+                Subscriber.subscriber_last_name,
+                PhysicalTicket.physical_ticket_number
+            )\
+            .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
+            .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
+            .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
+            .filter(
+                Subscriber.subscriber_first_name == subscriber_first_name,
+                Subscriber.subscriber_last_name == subscriber_last_name,
+                Subscription.operator_id == operator_id,
+                SubscriptionCampaign.campaign_year == datetime.now().year
+            )\
+            .all()
+    else:
+        return db.session.query(
+                Subscriber.subscriber_id,
+                Subscriber.subscriber_first_name,
+                Subscriber.subscriber_last_name,
+                PhysicalTicket.physical_ticket_number
+            )\
+            .join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
+            .join(PhysicalTicket, Subscription.physical_ticket_id == PhysicalTicket.physical_ticket_id)\
+            .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
+            .filter(
+                Subscriber.subscriber_first_name == subscriber_first_name,
+                Subscriber.subscriber_last_name == subscriber_last_name,#removing filters by_year and oeprator_id
+            )\
+            .all()
 
 def get_subscriber_and_current_physical_ticket(subscriber_id):
     return db.session.query(

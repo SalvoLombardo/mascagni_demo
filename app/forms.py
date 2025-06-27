@@ -143,3 +143,4 @@ class SubscriberInfoForm(FlaskForm):
     new_physical_ticket_number= SelectField('Seleziona numero di abbonamento nuovo', coerce=int, validators=[DataRequired(message="Seleziona un ticket")])
 
     submit= SubmitField('Aggiorna abbonato')
+    

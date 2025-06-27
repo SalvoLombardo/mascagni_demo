@@ -324,13 +324,17 @@ def create_telephon_book():
     .all()
     
     formatted_subscribers=[]
+    subscriber_without_phone=[]
 
     for first_name, last_name, phone in subscribers:
         string= f'{phone} , {last_name} {first_name}'
-        formatted_subscribers.append(string)
+        if phone:
+            formatted_subscribers.append(string)
+        else:
+            subscriber_without_phone.append(string)
     headers =["Numero , Nome Cognome"]
     
-    return render_template('create_telephon_book.html',formatted_subscribers=formatted_subscribers, headers =["Numero , Nome Cognome"])
+    return render_template('create_telephon_book.html',formatted_subscribers=formatted_subscribers,no_phone=subscriber_without_phone, headers =["Numero , Nome Cognome"])
 
 
 @admin_bp.route('/main_admin/download_excel', methods=['GET'])

@@ -25,6 +25,19 @@
     {% endfor %}
   </tbody>
 </table>
+<br>
+<br>
+<br>
+
+<h4>Attenzione: questi abbonati risultano senza numero di telefono</h4>
+<ul>
+    {% for p in no_phone %}
+        <li>
+            {{ p}} 
+        </li>
+    {% endfor %}
+</ul>
+
 
 <h2>Iscritti {{ year }}</h2>
 <form method="GET" action="{{ url_for('admin.download_excel') }}">

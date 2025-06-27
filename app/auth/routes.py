@@ -267,8 +267,12 @@ def search_subscriber_by_operator():
     if form.validate_on_submit():
         subscriber_first_name = form.subscriber_first_name.data.strip().capitalize()
         subscriber_last_name=form.subscriber_last_name.data.strip().capitalize()
-        operator_id=current_user.operator_id
-
+        
+        if not current_user.operator_is_admin:
+            operator_id=current_user.operator_id
+        else:
+            operator_id=None #passing None to say this is an admin, see in find_subscriber_by_operator function
+        
         result = subscriber_service.find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id)
 
         return render_template('search_results.html',result=result,form=form)
@@ -295,7 +299,6 @@ def edit_subscriber(subscriber_id):
     
     form = SubscriberInfoForm()
     
-
     available_tickets_for_operator = subscriber_service.get_available_tickets_for_operator(current_user.operator_id)
     
     choices = [
