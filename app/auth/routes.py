@@ -14,7 +14,7 @@ from app.forms import OperatorSignupForm, OperatorLoginForm, AddSubscriberForm ,
 from app.service import subscriber_service as subscriber_service
 from app.service import subscription_service as subscription_service
 from app.exporter import subscriber_exporter as exp_service
-
+from app.service import operator_authentication as operator_auth_service
 
 
 auth_bp= Blueprint('auth', __name__)
@@ -51,16 +51,13 @@ def login_operator():
         username=form.username.data.strip()
         password=form.password.data
 
-        
-        
-        operator=Operator.query.filter_by(operator_username=username).first()
-
-        if operator and bcrypt.check_password_hash(operator.operator_password,password):
+        operator=operator_auth_service.login_operator_func(username,password)
+        if operator :
             login_user(operator)
             flash('login Riuscito')
             return redirect(url_for('auth.main_operator'))
         else:
-            flash('Login fallito')
+            flash('Credenziali non validde', category='error')
             return redirect(url_for('auth.login_operator'))
         
     return render_template ('login_operator.html', form=form)

@@ -12,13 +12,17 @@ Auth BP
 
 Admin BP
 -Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)(FATTO??????????)
-
+-Aggiungere su eliminazione abbonato warning se abbonato ha >1 campagne 
+-Su eliminazione abbonato fare ricerca ilike
 
 IN SOSPESO
 - Controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
 
 - Controllare numero biglietto fisico e campaign_year su u duplicato
 
+
+EVENTUALI
+- Controllo da fare se non ci sono available tickets pe operatore non carica la pagina, ne su add ne su edit
 
 
 

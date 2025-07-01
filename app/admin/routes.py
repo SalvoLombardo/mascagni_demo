@@ -203,6 +203,7 @@ def delete_campaign():
     form.year.choices = choise
 
     if form.validate_on_submit():
+        
         year=form.year.data
         selected_campaign=SubscriptionCampaign.query.filter_by(campaign_year=year).first()
 
