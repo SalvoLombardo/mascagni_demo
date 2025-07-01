@@ -2,13 +2,11 @@ Da sistemare
 
 
 Auth BP
-- Da sistemare la parte di login admin
 - Studiare Bootstraps
 - Capire come gestire la durata del login
 - Inserimento lista abbonati e altri elenchi in tabelle
-- Capire come funziona la questione di conversione ad excel e controlla perchè c'è una colonna in più nel file scaricato
-- Uppercase anche su ricerca def search_subscriber_by_operator()
-- Continuare edit subscriber by operator
+- Excel e controlla perchè c'è una colonna in più nel file scaricato
+
 
 Admin BP
 -Creare def eliminazione abbonato o abbonamento?(iniziato e da finire)(FATTO??????????)
@@ -22,7 +20,11 @@ IN SOSPESO
 
 
 EVENTUALI
-- Controllo da fare se non ci sono available tickets pe operatore non carica la pagina, ne su add ne su edit
+- Controllo da fare se non ci sono available tickets per operatore non carica la pagina, ne su add ne su edit (per 
+cercare disponibilità possibile UTILIZZARE UNICA FUNZIONE ,anche per view_assigned_tickets(): subito sotto)
+
+- Aggiungere conferma eventuale da parte di admin quando si elimina un contratto o una campagna 
+
 
 
 

@@ -16,11 +16,15 @@ from io import BytesIO
 from flask import send_file
 
 from app.service import authentication_service as auth_service
+from app.service import admin_service as admin_service
 
 
 admin_bp= Blueprint('admin', __name__)
 
 
+#####################################################################
+#################      SIGNIN LOGIN LOGOUT     ######################
+#################          SECTION             ######################
 @admin_bp.route('/signin_admin', methods=['GET', 'POST'])
 def signin_admin():
     form = AdminSignupForm()
@@ -49,7 +53,6 @@ def signin_admin():
             return redirect(url_for('admin.login_admin'))
 
     return render_template('signin_admin.html', form=form)
-
 
 @admin_bp.route('/login_admin', methods=['GET','POST'])
 def login_admin():
@@ -82,6 +85,15 @@ def logout_admin():
 def main_admin():
     return render_template ('main_admin.html')
 
+
+
+
+
+
+
+#####################################################################
+#################      CREATE/DELETE NEW CAMPAIGN     ###############
+#################          SECTION             ######################
 @admin_bp.route('/main_admin/create_new_campaign',methods=['GET','POST'])
 @admin_required
 def create_new_campaign():
@@ -89,106 +101,25 @@ def create_new_campaign():
     form=NewCampaignEmptyButton()
 
     if form.validate_on_submit():
-
         current_year=datetime.now().year
         campaign=SubscriptionCampaign.query.filter_by(campaign_year=current_year).first()
-        
+
         if not campaign:
-            campaign = SubscriptionCampaign(campaign_year=current_year)
-            db.session.add(campaign)
-            db.session.commit()
+            new_campaign=admin_service.new_campaign(current_year)
 
-            operator_id=current_user.operator_id
-            for num in range(1,300):
-                ticket = PhysicalTicket(
-                    physical_ticket_number=num,
-                    physical_ticket_is_available=True,
-                    operator_id=operator_id,
-                    campaign_id=campaign.campaign_id
-                )
-                db.session.add(ticket)
-
-            db.session.commit()
-
-            flash('Nuova campagna creata e aggiunti 300 abbonamenti')
-            return redirect (url_for('admin.main_admin'))
+            if new_campaign:
+                flash('Nuova campagna creata e aggiunti 300 abbonamenti')
+                return redirect (url_for('admin.main_admin'))
+            else:
+                flash('Operazione Fallita', 'danger')
+                return redirect( url_for('admin.main_admin'))
+                
         else:
             flash('Esiste già una campagna per quest anno')
             return redirect( url_for('admin.main_admin'))
 
     return render_template('create_new_campaign.html',form=form)
-
-
-
-
-
-
-@admin_bp.route('/main_admin/search_who_delete',methods=['GET','POST'])
-@admin_required
-def search_who_delete():
-    form=SearchSubscriberForm()
-    delete_form=DeleteForm()
-    if form.validate_on_submit():
-        subscriber_first_name = form.subscriber_first_name.data.strip()#.capitalize()
-        subscriber_last_name=form.subscriber_last_name.data.strip()#.capitalize()
-
-        subscribers = db.session.query(Subscriber).filter(
-            Subscriber.subscriber_first_name == subscriber_first_name,
-            Subscriber.subscriber_last_name == subscriber_last_name
-        ).all()
-
-        if not subscribers:
-            flash('Nessun utente trovato')
-            return redirect(url_for('admin.search_who_delete'))
-        
-        return render_template('choose_delete_subscriber.html',subscribers=subscribers,delete_form=delete_form)
-
-    return render_template('search_who_delete.html',form=form)
-
-
-
-@admin_bp.route('/main_admin/choose_delete_subscriber',methods=['GET','POST'])
-@admin_required
-def choose_delete_subscriber():
-    return render_template('choose_delete_subscriber.html')
-
-
-@admin_bp.route('/main_admin/confirm_delete_subscriber',methods=['POST'])
-@admin_required
-def confirm_delete_subscriber():
-    subscriber_id=request.form.get('subscriber_id')#I'm getting this data, was passed trough from in hidden method in choose_delete_subscriber.html
-
-    if not subscriber_id:
-        flash('Id utente non valido')
-        return redirect(url_for('admin.search_who_delete'))
-    
-    subscriber=Subscriber.query.get(subscriber_id)
-
-    if not subscriber:
-        flash("Utente non trovato.")
-        return redirect(url_for('admin.search_who_delete'))
-
-    subscriptions=Subscription.query.filter_by(subscriber_id=subscriber_id).all()
-    
-    
-    for sub in subscriptions:
-        ticket = PhysicalTicket.query.get(sub.physical_ticket_id)
-        if ticket:
-            ticket.physical_ticket_is_available = True
-
-        db.session.delete(sub)
-    
-    
-    db.session.delete(subscriber)
-
-    db.session.commit()
-
-    flash('Utente e tutte le sue iscrizioni cancellate')
-    return redirect(url_for('admin.main_admin'))
-
-
-   
-    
+ 
 @admin_bp.route('/main_admin/delete_campaign',methods=['GET','POST'])
 @admin_required
 def delete_campaign():
@@ -228,6 +159,79 @@ def delete_campaign():
     return render_template('delete_campaign.html',form=form)
     
 
+
+
+#####################################################################
+#################      TOTAL DELETE OF SUBSCRIBER     ###############
+#################          SECTION             ######################
+@admin_bp.route('/main_admin/search_who_delete',methods=['GET','POST'])
+@admin_required
+def search_who_delete():
+    form=SearchSubscriberForm()
+    delete_form=DeleteForm()
+    if form.validate_on_submit():
+        subscriber_first_name = form.subscriber_first_name.data.strip().capitalize()
+        subscriber_last_name=form.subscriber_last_name.data.strip().capitalize()
+
+        subscribers = db.session.query(Subscriber).filter(
+            Subscriber.subscriber_first_name == subscriber_first_name,
+            Subscriber.subscriber_last_name == subscriber_last_name
+        ).all()
+
+        if not subscribers:
+            flash('Nessun utente trovato')
+            return redirect(url_for('admin.search_who_delete'))
+        
+        return render_template('choose_delete_subscriber.html',subscribers=subscribers,delete_form=delete_form)
+
+    return render_template('search_who_delete.html',form=form)
+
+@admin_bp.route('/main_admin/choose_delete_subscriber',methods=['GET','POST'])
+@admin_required
+def choose_delete_subscriber():
+    return render_template('choose_delete_subscriber.html')
+
+@admin_bp.route('/main_admin/confirm_delete_subscriber',methods=['POST'])
+@admin_required
+def confirm_delete_subscriber():
+    subscriber_id=request.form.get('subscriber_id')#I'm getting this data, was passed trough from in hidden method in choose_delete_subscriber.html
+
+    if not subscriber_id:
+        flash('Id utente non valido')
+        return redirect(url_for('admin.search_who_delete'))
+    
+    subscriber=Subscriber.query.get(subscriber_id)
+
+    if not subscriber:
+        flash("Utente non trovato.")
+        return redirect(url_for('admin.search_who_delete'))
+
+    subscriptions=Subscription.query.filter_by(subscriber_id=subscriber_id).all()
+    
+    
+    for sub in subscriptions:
+        ticket = PhysicalTicket.query.get(sub.physical_ticket_id)
+        if ticket:
+            ticket.physical_ticket_is_available = True
+
+        db.session.delete(sub)
+    
+    
+    db.session.delete(subscriber)
+
+    db.session.commit()
+
+    flash('Utente e tutte le sue iscrizioni cancellate')
+    return redirect(url_for('admin.main_admin'))
+
+
+   
+
+
+
+#####################################################################
+################    ASSIGN/VIEW TICKET TO OPERATOR    ###############
+#################          SECTION             ######################
 @admin_bp.route('/main_admin/choose_operator_for_assign',methods=['GET'])
 @admin_required
 def choose_operator_for_assign():
@@ -235,7 +239,6 @@ def choose_operator_for_assign():
     operator=Operator.query.all()
 
     return render_template('choose_operator_for_assign.html',operator=operator)
-
 
 @admin_bp.route('/main_admin/assigned_physical_tickets/<int:operator_id>',methods=['GET','POST'])
 @admin_required
@@ -308,6 +311,12 @@ def view_assigned_tickets():
     return render_template("view_assigned_tickets.html", tickets=tickets, year=current_year)
 
 
+
+
+
+#####################################################################
+#################  CREATE/VIEW/DOWNLOAD TELEPHON BOOK ###############
+#################          SECTION             ######################
 @admin_bp.route('/main_admin/create_telephon_book', methods=['GET'])
 @admin_required
 def create_telephon_book():
