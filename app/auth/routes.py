@@ -14,7 +14,7 @@ from app.forms import OperatorSignupForm, OperatorLoginForm, AddSubscriberForm ,
 from app.service import subscriber_service as subscriber_service
 from app.service import subscription_service as subscription_service
 from app.exporter import subscriber_exporter as exp_service
-from app.service import operator_authentication as operator_auth_service
+from app.service import authentication_service as auth_service
 
 
 auth_bp= Blueprint('auth', __name__)
@@ -27,20 +27,25 @@ def signin_operator():
     form = OperatorSignupForm()
 
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        if auth_service.is_username_taken(form.username.data):
+            flash(f'Non posso creare questo utente perchè esiste già ')
+            return redirect(url_for('auth.signin_admin'))
+        
+        else:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
-        operator = Operator(
-            operator_username=form.username.data,
-            operator_password=hashed_password,
-            operator_first_name=form.first_name.data,
-            operator_last_name=form.last_name.data
-        )
+            operator = Operator(
+                operator_username=form.username.data,
+                operator_password=hashed_password,
+                operator_first_name=form.first_name.data,
+                operator_last_name=form.last_name.data
+            )
 
-        db.session.add(operator)
-        db.session.commit()
+            db.session.add(operator)
+            db.session.commit()
 
-        flash('Registrazione riuscita, adesso devi fare il Login')
-        return redirect(url_for('auth.login_operator'))
+            flash('Registrazione riuscita, adesso devi fare il Login')
+            return redirect(url_for('auth.login_operator'))
 
     return render_template('signin_operator.html', form=form)
 
@@ -51,13 +56,13 @@ def login_operator():
         username=form.username.data.strip()
         password=form.password.data
 
-        operator=operator_auth_service.login_operator_func(username,password)
+        operator=auth_service.login_operator_func(username,password)
         if operator :
             login_user(operator)
             flash('login Riuscito')
             return redirect(url_for('auth.main_operator'))
         else:
-            flash('Credenziali non validde', category='error')
+            flash('Credenziali non valide', category='error')
             return redirect(url_for('auth.login_operator'))
         
     return render_template ('login_operator.html', form=form)

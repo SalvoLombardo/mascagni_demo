@@ -15,6 +15,8 @@ import pandas as pd
 from io import BytesIO
 from flask import send_file
 
+from app.service import authentication_service as auth_service
+
 
 admin_bp= Blueprint('admin', __name__)
 
@@ -25,11 +27,10 @@ def signin_admin():
 
     if form.validate_on_submit():
         #being sure there's not another operator with the same name
-        existing_operator=Operator.query.filter_by(operator_username=form.username.data).first()
-
-        if existing_operator:
+        if auth_service.is_username_taken(form.username.data):
             flash(f'Non posso creare questo utente perchè esiste già ')
             return redirect(url_for('admin.signin_admin'))
+        
         else:
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
@@ -54,19 +55,18 @@ def signin_admin():
 def login_admin():
     form=AdminLoginForm()
     if form.validate_on_submit():
-        username=form.username.data
+        username=form.username.data.strip()
         password=form.password.data
 
         
         
-        operator=Operator.query.filter_by(operator_username=username).first()
-
-        if operator and bcrypt.check_password_hash(operator.operator_password,password) and operator.operator_is_admin==True:
+        operator=auth_service.login_operator_func(username,password)
+        if operator :
             login_user(operator)
-            flash('Admin Login Riuscito')
+            flash('login Riuscito')
             return redirect(url_for('admin.main_admin'))
         else:
-            flash('Login fallito')
+            flash('Credenziali non valide', category='error')
             return redirect(url_for('admin.login_admin'))
         
     return render_template ('login_operator.html', form=form)
