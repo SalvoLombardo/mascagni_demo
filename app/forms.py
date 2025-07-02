@@ -131,8 +131,17 @@ class AssignPhysicalTickets(FlaskForm):
     single_ticket7= IntegerField('Abbonamento singolo', validators=[Optional(),NumberRange(min=1, max=300)])
     single_ticket8= IntegerField('Abbonamento singolo', validators=[Optional(),NumberRange(min=1, max=300)])
 
-    
     submit = SubmitField('Invio')
+
+    def is_any_field_filled(self):#creating a function to check if almost one field is not empty
+        return any([
+            self.from1.data, self.to1.data,
+            self.from2.data, self.to2.data,
+            self.single_ticket1.data, self.single_ticket2.data,
+            self.single_ticket3.data, self.single_ticket4.data,
+            self.single_ticket5.data, self.single_ticket6.data,
+            self.single_ticket7.data, self.single_ticket8.data
+        ])
     
 class SubscriberInfoForm(FlaskForm):
     subscriber_first_name= StringField('Nome',validators=[DataRequired()])

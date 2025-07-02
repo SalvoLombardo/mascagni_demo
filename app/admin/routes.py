@@ -218,7 +218,6 @@ def confirm_delete_subscriber():
 @admin_bp.route('/main_admin/choose_operator_for_assign',methods=['GET'])
 @admin_required
 def choose_operator_for_assign():
-    
     operator=Operator.query.all()
 
     return render_template('choose_operator_for_assign.html',operator=operator)
@@ -229,7 +228,9 @@ def assigned_physical_tickets(operator_id):
     form=AssignPhysicalTickets()
 
     if form.validate_on_submit():
-        
+        if not form.is_any_field_filled():
+            flash('Compila almeno un campo')
+            return redirect(url_for('admin.assigned_physical_tickets'))
         
         from1=form.from1.data
         to1=form.to1.data

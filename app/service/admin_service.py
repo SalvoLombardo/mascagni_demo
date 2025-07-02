@@ -25,8 +25,6 @@ def new_campaign(current_year):
         db.session.rollback()
         return False
 
-
-
 def total_delete_subscriber(subscriber_id):
     subscriber=Subscriber.query.get(subscriber_id)
     subscriptions=Subscription.query.filter_by(subscriber_id=subscriber_id).all()
@@ -47,3 +45,5 @@ def total_delete_subscriber(subscriber_id):
     except Exception:
         db.session.rollback()
         return False
+
+

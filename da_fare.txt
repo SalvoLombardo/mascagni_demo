@@ -22,7 +22,6 @@ IN SOSPESO
 EVENTUALI
 - Controllo da fare se non ci sono available tickets per operatore non carica la pagina, ne su add ne su edit (per 
 cercare disponibilità possibile UTILIZZARE UNICA FUNZIONE ,anche per view_assigned_tickets(): subito sotto)
-
 - Aggiungere conferma eventuale da parte di admin quando si elimina un contratto o una campagna 
 
 
