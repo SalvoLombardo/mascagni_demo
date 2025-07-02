@@ -47,3 +47,25 @@ def total_delete_subscriber(subscriber_id):
         return False
 
 
+def get_sub_for_telephone_book(current_year):
+    subscribers = db.session.query(
+        Subscriber.subscriber_first_name,
+        Subscriber.subscriber_last_name,
+        Subscriber.subscriber_phone_number
+    ).join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
+    .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
+    .filter(SubscriptionCampaign.campaign_year == current_year)\
+    .order_by(Subscriber.subscriber_last_name)\
+    .all()
+    
+    formatted_subscribers=[]
+    subscriber_without_phone=[]
+
+    for first_name, last_name, phone in subscribers:
+        string= f'{phone} , {last_name} {first_name}'
+        if phone:
+            formatted_subscribers.append(string)
+        else:
+            subscriber_without_phone.append(string)
+    
+    return  formatted_subscribers , subscriber_without_phone

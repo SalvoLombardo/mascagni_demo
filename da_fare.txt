@@ -14,8 +14,6 @@ Admin BP
 -Su eliminazione abbonato fare ricerca ilike
 
 IN SOSPESO
-- Controllare def assigned_physical_tickets(operator_id): quand non si inseriscono dati
-
 - Controllare numero biglietto fisico e campaign_year su u duplicato
 
 

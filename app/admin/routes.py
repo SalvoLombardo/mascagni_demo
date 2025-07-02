@@ -279,9 +279,6 @@ def assigned_physical_tickets(operator_id):
 @admin_bp.route('/main_admin/view_assigned_tickets', methods=['GET'])
 @admin_required
 def view_assigned_tickets():
-    from sqlalchemy.orm import joinedload
-    
-
     current_year = datetime.utcnow().year
 
     tickets = PhysicalTicket.query.join(SubscriptionCampaign).filter(
@@ -304,30 +301,10 @@ def view_assigned_tickets():
 @admin_bp.route('/main_admin/create_telephon_book', methods=['GET'])
 @admin_required
 def create_telephon_book():
-
     current_year = datetime.utcnow().year
 
-    subscribers = db.session.query(
-        Subscriber.subscriber_first_name,
-        Subscriber.subscriber_last_name,
-        Subscriber.subscriber_phone_number
-    ).join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
-    .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
-    .filter(SubscriptionCampaign.campaign_year == current_year)\
-    .order_by(Subscriber.subscriber_last_name)\
-    .all()
-    
-    formatted_subscribers=[]
-    subscriber_without_phone=[]
+    formatted_subscribers , subscriber_without_phone = admin_service.get_sub_for_telephone_book(current_year)
 
-    for first_name, last_name, phone in subscribers:
-        string= f'{phone} , {last_name} {first_name}'
-        if phone:
-            formatted_subscribers.append(string)
-        else:
-            subscriber_without_phone.append(string)
-    headers =["Numero , Nome Cognome"]
-    
     return render_template('create_telephon_book.html',formatted_subscribers=formatted_subscribers,no_phone=subscriber_without_phone, headers =["Numero , Nome Cognome"])
 
 
