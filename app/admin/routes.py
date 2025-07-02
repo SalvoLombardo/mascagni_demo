@@ -10,13 +10,14 @@ from app.decorators import admin_required
 from datetime import datetime
 
 from .utils import assign_ticket
-
-import pandas as pd
-from io import BytesIO
 from flask import send_file
+
+
 
 from app.service import authentication_service as auth_service
 from app.service import admin_service as admin_service
+from app.service import phone_book_service as phone_book_service
+
 
 
 admin_bp= Blueprint('admin', __name__)
@@ -303,7 +304,7 @@ def view_assigned_tickets():
 def create_telephon_book():
     current_year = datetime.utcnow().year
 
-    formatted_subscribers , subscriber_without_phone = admin_service.get_sub_for_telephone_book(current_year)
+    formatted_subscribers , subscriber_without_phone = phone_book_service.get_sub_for_telephone_book(current_year)
 
     return render_template('create_telephon_book.html',formatted_subscribers=formatted_subscribers,no_phone=subscriber_without_phone, headers =["Numero , Nome Cognome"])
 
@@ -313,28 +314,12 @@ def create_telephon_book():
 def download_excel():
     current_year = datetime.utcnow().year
 
-    subscribers = db.session.query(
-        Subscriber.subscriber_first_name,
-        Subscriber.subscriber_last_name,
-        Subscriber.subscriber_phone_number
-    ).join(Subscription, Subscriber.subscriber_id == Subscription.subscriber_id)\
-    .join(SubscriptionCampaign, Subscription.campaign_id == SubscriptionCampaign.campaign_id)\
-    .filter(SubscriptionCampaign.campaign_year == current_year)\
-    .order_by(Subscriber.subscriber_last_name)\
-    .all()
-
-    # Formatta come richiesto
-    data = [f"{phone} , {last_name} {first_name}" for first_name, last_name, phone in subscribers]
-
-    df = pd.DataFrame(data, columns=["Numero , Nome Cognome"])
-
-    output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False)
-    output.seek(0)
-
+    subscribers = phone_book_service.get_phonebook_subscribers(current_year)
+    formatted = phone_book_service.format_phonebook_rows(subscribers)
+    file_stream = phone_book_service.generate_phonebook_excel(formatted)
+    
     return send_file(
-        output,
+        file_stream,
         download_name=f"rubrica_{current_year}.xlsx",
         as_attachment=True,
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
