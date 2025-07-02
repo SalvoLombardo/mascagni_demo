@@ -194,35 +194,18 @@ def choose_delete_subscriber():
 @admin_bp.route('/main_admin/confirm_delete_subscriber',methods=['POST'])
 @admin_required
 def confirm_delete_subscriber():
-    subscriber_id=request.form.get('subscriber_id')#I'm getting this data, was passed trough from in hidden method in choose_delete_subscriber.html
-
+    subscriber_id=request.form.get('subscriber_id', type=int)#I'm getting this data, was passed trough from in hidden method in choose_delete_subscriber.html
     if not subscriber_id:
         flash('Id utente non valido')
         return redirect(url_for('admin.search_who_delete'))
     
-    subscriber=Subscriber.query.get(subscriber_id)
+    if admin_service.total_delete_subscriber(subscriber_id):
+        flash('Utente e tutte le sue iscrizioni cancellate')
+        return redirect(url_for('admin.main_admin'))
+    else:
+        flash('Attenzione: Errore interno')
+        return redirect(url_for('admin.main_admin'))
 
-    if not subscriber:
-        flash("Utente non trovato.")
-        return redirect(url_for('admin.search_who_delete'))
-
-    subscriptions=Subscription.query.filter_by(subscriber_id=subscriber_id).all()
-    
-    
-    for sub in subscriptions:
-        ticket = PhysicalTicket.query.get(sub.physical_ticket_id)
-        if ticket:
-            ticket.physical_ticket_is_available = True
-
-        db.session.delete(sub)
-    
-    
-    db.session.delete(subscriber)
-
-    db.session.commit()
-
-    flash('Utente e tutte le sue iscrizioni cancellate')
-    return redirect(url_for('admin.main_admin'))
 
 
    
