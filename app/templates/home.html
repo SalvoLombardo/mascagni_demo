@@ -21,7 +21,12 @@
 
         <div class="dashboard-buttons" style="max-width: 400px; margin: 0 auto; text-align: center;">
             <h4>Accedi come Operatore</h4>
+            <!--++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#-->
+            {% if not config.DEMO_MODE %}
             <a href="{{ url_for('auth.signin_operator') }}" class="btn btn-primary">SignIn</a>
+            {% endif %}
+            <!--++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#-->
+
             <a href="{{ url_for('auth.login_operator') }}" class="btn btn-primary">LogIn</a>
         </div>
 
@@ -29,7 +34,12 @@
 
         <div class="dashboard-buttons" style="max-width: 400px; margin: 0 auto; text-align: center;">
             <h4>Sezione Admin</h4>
+            <!--++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#-->
+            {% if not config.DEMO_MODE %}
             <a href="{{ url_for('admin.signin_admin') }}" class="btn danger">SignIn Admin</a>
+            {% endif %}
+            <!--++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#-->
+
             <a href="{{ url_for('admin.login_admin') }}" class="btn danger">LogIn Admin</a>
         </div>
 

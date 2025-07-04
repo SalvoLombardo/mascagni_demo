@@ -24,3 +24,6 @@ migrations/versions/
 # File sistema operativo
 .DS_Store
 Thumbs.db
+
+# Variabili d'ambiente
+.flaskenv

@@ -1,4 +1,4 @@
-from flask import Blueprint,request,redirect,url_for,render_template,flash,session
+from flask import Blueprint,request,redirect,url_for,render_template,flash,session,current_app
 from flask_login import login_user, login_required,logout_user,current_user
 from app.extension import db,bcrypt
 
@@ -28,6 +28,15 @@ admin_bp= Blueprint('admin', __name__)
 #################          SECTION             ######################
 @admin_bp.route('/signin_admin', methods=['GET', 'POST'])
 def signin_admin():
+    
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    if current_app.config["DEMO_MODE"]:
+        flash("Registrazione disabilitata in demo.", "warning")
+        return redirect(url_for("auth.login"))
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    
+    
+    
     form = AdminSignupForm()
 
     if form.validate_on_submit():
@@ -124,6 +133,14 @@ def create_new_campaign():
 @admin_bp.route('/main_admin/delete_campaign',methods=['GET','POST'])
 @admin_required
 def delete_campaign():
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    if current_app.config["DEMO_MODE"]:
+        flash("Registrazione disabilitata in demo.", "warning")
+        return redirect(url_for("admin.main_admin"))
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    
+    
+
     form=SelectYearFormat()
 
     available_years=list(range(2020,2040))

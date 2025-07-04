@@ -1,4 +1,4 @@
-from flask import Blueprint,request,redirect,url_for,render_template,flash,session,Response
+from flask import Blueprint,request,redirect,url_for,render_template,flash,session,Response,current_app
 from flask_login import login_user, login_required,logout_user,current_user
 from flask_wtf.csrf import generate_csrf
 from app.extension import db,bcrypt
@@ -24,6 +24,13 @@ auth_bp= Blueprint('auth', __name__)
 #################          SECTION             ######################
 @auth_bp.route('/signin_operator', methods=['GET', 'POST'])
 def signin_operator():
+
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    if current_app.config["DEMO_MODE"]:
+        flash("Registrazione disabilitata in demo.", "warning")
+        return redirect(url_for("auth.login"))
+    #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
+    
     form = OperatorSignupForm()
 
     if form.validate_on_submit():
