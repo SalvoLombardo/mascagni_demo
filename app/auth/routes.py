@@ -125,7 +125,7 @@ def add_subscriber():
             return redirect(url_for('auth.add_subscriber_confirm'))
         
     if request.method == "POST": #Section to show errors
-        flash("Correggi gli errori evidenziati e riprova.", "warning")
+        flash("Ci sono degli errori, ricontrolla.", "warning")
         
     return render_template('add_subscriber.html', form=form)
 

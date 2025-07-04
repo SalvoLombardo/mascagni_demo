@@ -54,6 +54,14 @@ class AddSubscriberForm(FlaskForm):
             field.data = 'non_pagato'
 
 
+    def validate_first_name(form, field):
+        if any(char.isdigit() for char in field.data):
+            raise ValidationError("Il nome non può contenere numeri.")
+
+    def validate_last_name(form, field):
+        if any(char.isdigit() for char in field.data):
+            raise ValidationError("Il cognome non può contenere numeri.")
+    
 
 class AdminSignupForm(FlaskForm):
     username=StringField('Username', validators=[DataRequired()])
