@@ -17,7 +17,7 @@ from config import DevelopmentConfig,ProductionConfig
 load_dotenv()
 
 
-def create_app():
+def create_app(test_config:dict | None=None):
     app=Flask(__name__)
 
     #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
@@ -27,6 +27,11 @@ def create_app():
     )
     #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
 
+
+    if test_config:
+        app.config.update(test_config)
+
+    
     
     #initializing extensions
     db.init_app(app)

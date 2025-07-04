@@ -4,19 +4,18 @@ from app.extension import db
 from app.models import (Subscriber, Subscription,SubscriptionCampaign,PhysicalTicket, Operator)
 from sqlalchemy import exists, and_
 from wtforms import ValidationError
+
 def get_available_tickets_for_operator(operator_id):
     return PhysicalTicket.query.filter(
             PhysicalTicket.physical_ticket_is_available == True,
             PhysicalTicket.assigned_to_operator_id == operator_id
         ).all()
 
-
 def find_duplicates(first_name,last_name):
     return  Subscriber.query.filter_by(
             subscriber_first_name=first_name,
             subscriber_last_name=last_name
         ).all()
-
 
 def build_pending_subscribers_data(form, operator_id, campaign_id):#passing operator_id and campaign_id, the only variables that doesn't exists in form
     return {
@@ -33,7 +32,6 @@ def build_pending_subscribers_data(form, operator_id, campaign_id):#passing oper
                 'subscription_assigned_at':datetime.utcnow()
             }
         
-
 def get_subscription_this_year(subscriber_id :int): #This gives me a boolean result to just know if it's true or not
     current_year = datetime.now().year
     return db.session.query(
@@ -43,7 +41,6 @@ def get_subscription_this_year(subscriber_id :int): #This gives me a boolean res
                  SubscriptionCampaign.campaign_year == current_year)
         )
     ).scalar() #Using scalar for boolean result
-
 
 def save_new_subscriber_and_subscription(data, is_new_subscriber):
     
@@ -85,7 +82,8 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
         
         db.session.add(new_subscription)
 
-        physical_ticket = PhysicalTicket.query.get(data['ticket_id'])
+        physical_ticket = db.session.get(PhysicalTicket, data['ticket_id'])
+        
         
         physical_ticket.physical_ticket_is_available = False
 
@@ -96,7 +94,6 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
         flash("Abbonato già iscritto per l’anno corrente", "warning")
         return False
     
-
 def get_subscriber_not_paid_by_operator(operator_id: int):
     return Subscription.query.join(PhysicalTicket).filter(
         Subscription.subscription_is_paid == False,
