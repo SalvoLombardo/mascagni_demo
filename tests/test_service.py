@@ -6,12 +6,8 @@ from app.service.subscriber_service import (
     save_new_subscriber_and_subscription,
 )
 from app.models import Subscriber, Subscription, PhysicalTicket
-from tests.factories import (
-    make_operator,
-    make_campaign,
-    make_ticket,
-    make_subscriber,
-)
+from tests.factories import make_operator,make_campaign,make_ticket,make_subscriber
+
 
 # ──────────────────────────────────────────────────────────
 def test_get_available_tickets_only_returns_available_for_given_operator(db_session):
@@ -74,3 +70,47 @@ def test_save_new_subscriber_and_subscription(db_session):
     assert Subscriber.query.count() == 1
     assert Subscription.query.count() == 1
     assert db.session.get(PhysicalTicket, ticket.physical_ticket_id).physical_ticket_is_available is False
+
+
+
+def test_save_new_subscriber_duplicate_same_year(db_session):
+    op = make_operator()
+    camp = make_campaign()
+    ticket1 = make_ticket(1, op.operator_id, camp.campaign_id)
+    ticket2 = make_ticket(2, op.operator_id, camp.campaign_id)
+
+    # first insertion
+    data = {
+        "first_name": "Paolo",
+        "last_name": "Rossi",
+        "phone_number": "0000",
+        "note": "nothing",
+        "is_paid": False,
+        "payment_method": "contanti",
+        "subscription_note": "",
+        "ticket_id": ticket1.physical_ticket_id,
+        "campaign_id": camp.campaign_id,
+        "operator_id": op.operator_id,
+        "subscription_assigned_at": datetime.now(UTC),
+    }
+    assert save_new_subscriber_and_subscription(data, True) is True
+
+    #second insertion
+    data2 = {
+        "first_name": "Paolo",
+        "last_name": "Rossi",
+        "phone_number": "0000",
+        "note": "nothing",
+        "is_paid": True,
+        "payment_method": "contanti",
+        "subscription_note": "",
+        "ticket_id": ticket2.physical_ticket_id,
+        "campaign_id": camp.campaign_id,
+        "operator_id": op.operator_id,
+        "subscription_assigned_at": datetime.now(UTC),
+        "existing_subscriber_id": 1
+    }
+    
+    
+    assert save_new_subscriber_and_subscription(data2, False) is False
+    assert Subscription.query.count() == 1
