@@ -139,7 +139,6 @@ def delete_campaign():
         return redirect(url_for("admin.main_admin"))
     #++++++++++++++++++++++ DEMO MODE +++++++++++++++++++++++++++++++++++#
     
-    
 
     form=SelectYearFormat()
 
