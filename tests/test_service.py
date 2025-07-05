@@ -1,12 +1,8 @@
 from datetime import datetime, UTC
 from app.extension import db
-from app.service.subscriber_service import (
-    get_available_tickets_for_operator,
-    find_duplicates,
-    save_new_subscriber_and_subscription,
-)
+from app.service.subscriber_service import get_available_tickets_for_operator,find_duplicates,save_new_subscriber_and_subscription,get_subscription_this_year
 from app.models import Subscriber, Subscription, PhysicalTicket
-from tests.factories import make_operator,make_campaign,make_ticket,make_subscriber
+from tests.factories import make_operator,make_campaign,make_ticket,make_subscriber,make_subscription
 
 
 # ──────────────────────────────────────────────────────────
@@ -72,7 +68,6 @@ def test_save_new_subscriber_and_subscription(db_session):
     assert db.session.get(PhysicalTicket, ticket.physical_ticket_id).physical_ticket_is_available is False
 
 
-
 def test_save_new_subscriber_duplicate_same_year(db_session):
     op = make_operator()
     camp = make_campaign()
@@ -114,3 +109,14 @@ def test_save_new_subscriber_duplicate_same_year(db_session):
     
     assert save_new_subscriber_and_subscription(data2, False) is False
     assert Subscription.query.count() == 1
+
+
+
+def test_get_subscription_this_year(db_session):
+    subscriber1=make_subscriber('Mario','Rossi','123','')
+    campaign1=make_campaign(2021)
+    subscription1=make_subscription(True,'contanti','',1,1,1,1)
+
+    result=get_subscription_this_year(subscriber1.subscriber_id)
+
+    assert result == False

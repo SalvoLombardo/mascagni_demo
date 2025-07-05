@@ -2,7 +2,7 @@ from app.extension import db
 
 from flask_login import UserMixin
 
-from datetime import datetime
+from datetime import datetime,timezone
 
 class Subscriber(db.Model):
     __tablename__='subscribers'
@@ -49,7 +49,10 @@ class Subscription(db.Model):
     subscription_id=db.Column(db.Integer, primary_key=True)
     subscription_is_paid=db.Column(db.Boolean,nullable=False, default=False)
     subscription_payment_method=db.Column(db.String(100))
-    subscription_assigned_at=db.Column(db.DateTime, default=datetime.utcnow)
+    subscription_assigned_at = db.Column(
+        db.DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc)
+    )
     subscription_note=db.Column(db.Text)
 
     #FK of PhysicalTicket

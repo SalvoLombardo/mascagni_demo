@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.models import Operator, SubscriptionCampaign, PhysicalTicket, Subscriber
+from app.models import Operator, SubscriptionCampaign, PhysicalTicket, Subscriber,Subscription
 from app.extension import db
 
 def make_operator(
@@ -57,3 +57,19 @@ def make_subscriber(first_name, last_name, phone_number="0000", note=""):
     )
     db.session.add(subr)
     return subr
+
+
+def make_subscription(subscription_is_paid,subscription_payment_method,subscription_note,physical_ticket_id ,subscriber_id,campaign_id,operator_id):
+    
+    subscription=Subscription(
+        subscription_is_paid=subscription_is_paid,
+        subscription_payment_method=subscription_payment_method,
+        subscription_note=subscription_note,
+        physical_ticket_id =physical_ticket_id,
+        subscriber_id=subscriber_id,
+        campaign_id=campaign_id,
+        operator_id=operator_id
+    )
+    db.session.add(subscription)
+    db.session.commit()
+    return subscription
