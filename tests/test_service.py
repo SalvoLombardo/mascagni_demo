@@ -1,11 +1,11 @@
 from datetime import datetime, UTC
 from app.extension import db
-from app.service.subscriber_service import get_available_tickets_for_operator,find_duplicates,save_new_subscriber_and_subscription,get_subscription_this_year,get_subscriber_not_paid_by_operator
+from app.service.subscriber_service import get_available_tickets_for_operator,find_duplicates,save_new_subscriber_and_subscription,get_subscription_this_year,get_subscriber_not_paid_by_operator,find_subscriber_by_operator
 from app.models import Subscriber, Subscription, PhysicalTicket
 from tests.factories import make_operator,make_campaign,make_ticket,make_subscriber,make_subscription
 
 
-# ──────────────────────────────────────────────────────────
+
 def test_get_available_tickets_only_returns_available_for_given_operator(db_session):
     op1 = make_operator(username="operatore1", first_name="Aldo", last_name="Baglio")
     op2 = make_operator(username="operatore2", first_name="Giovanni", last_name="Giacomo")
@@ -24,7 +24,7 @@ def test_get_available_tickets_only_returns_available_for_given_operator(db_sess
     assert len(tickets) == 2
     assert set(numbers) == {1, 2}
 
-# ──────────────────────────────────────────────────────────
+
 def test_find_duplicates(db_session):
     make_subscriber("mario", "rossi", "0000")
     make_subscriber("mario", "rossi", "1111", "from ireland")
@@ -39,7 +39,7 @@ def test_find_duplicates(db_session):
     assert len(result) == 3
     assert names == {("mario", "rossi")}
 
-# ──────────────────────────────────────────────────────────
+
 def test_save_new_subscriber_and_subscription(db_session):
     op = make_operator(username="operatore")
     camp = make_campaign()
@@ -111,7 +111,6 @@ def test_save_new_subscriber_duplicate_same_year(db_session):
     assert Subscription.query.count() == 1
 
 
-
 def test_get_subscription_this_year(db_session):
     subscriber1=make_subscriber('Mario','Rossi','123','')
     campaign1=make_campaign(2021)
@@ -141,14 +140,51 @@ def test_get_subscriber_not_paid_by_operator(db_session):
 
     ticket1=make_ticket(1,1,1,False)
     ticket2=make_ticket(2,1,1,True)
-    ticket3=make_ticket(3,2,1,True)
+    ticket3=make_ticket(3,2,1,False)
 
     op1=make_operator('op1','x','fname','lname',False)
     op2=make_operator('op2','x','fname','lname',False)
 
-    result=get_subscriber_not_paid_by_operator(1)
+    result1=get_subscriber_not_paid_by_operator(1)
+    result2=get_subscriber_not_paid_by_operator(2)
 
-    assert len(result)==1
+    assert len(result1)==1
+    assert len(result2)==1
+    
 
+def test_find_subscriber_by_operator(db_session):
+    campaign=make_campaign()
+
+    subscriber1=make_subscriber('Mario','Rossi','123','')# added by operator1
+    subscriber2=make_subscriber('Paolo','Gallo','456','')# added by operator1
+    subscriber3=make_subscriber('Salvo','Brambilla','789','')# added by operator2
+
+    subscription1=make_subscription(False,'non_pagato','',1,1,1,1)#operator1
+    subscription2=make_subscription(True,'contanti','',2,2,2,1)#operator1
+    subscription3=make_subscription(False,'non_pagato','',3,3,1,2)#operator2
+
+    ticket1=make_ticket(1,1,1,False)
+    ticket2=make_ticket(2,1,1,True)
+    ticket3=make_ticket(3,2,1,False)
+
+    op1=make_operator('op1','x','fname','lname',False)
+    op2=make_operator('op2','x','fname','lname',False)
+
+    result1=find_subscriber_by_operator('Mario','Rossi',1)#test on op1
+    result2=find_subscriber_by_operator('Salvo','Brambilla',2)#test on op2
+    result3=find_subscriber_by_operator('Mario','Rossi',2)#test on op2
+    result4=find_subscriber_by_operator('Mario','Rossi',None)#none is used in this case to indicate admin,he can view every sub he want
+
+
+    assert len(result1)==1
+    assert len(result2)==1
+    assert len(result3)==0
+    assert len(result4)==1
+
+
+
+
+    
+    
 
     
