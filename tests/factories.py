@@ -49,14 +49,7 @@ def make_subscriber(first_name, last_name, phone_number="0000", note=""):
     db.session.add(sub)
     db.session.flush()
     return sub
-    subr= Subscriber(
-        subscriber_first_name=first_name,
-        subscriber_last_name=last_name,
-        subscriber_phone_number=phone_number,
-        subscriber_note=note
-    )
-    db.session.add(subr)
-    return subr
+    
 
 
 def make_subscription(subscription_is_paid,subscription_payment_method,subscription_note,physical_ticket_id ,subscriber_id,campaign_id,operator_id):

@@ -117,6 +117,12 @@ def test_get_subscription_this_year(db_session):
     campaign1=make_campaign(2021)
     subscription1=make_subscription(True,'contanti','',1,1,1,1)
 
-    result=get_subscription_this_year(subscriber1.subscriber_id)
+    subscriber2=make_subscriber('Paolo','Gallo','456','')
+    campaign2=make_campaign()
+    subscription2=make_subscription(True,'contanti','',2,2,2,1)
 
-    assert result == False
+    result1=get_subscription_this_year(subscriber1.subscriber_id)
+    result2=get_subscription_this_year(subscriber2.subscriber_id)
+
+    assert result1 == False
+    assert result2 == True
