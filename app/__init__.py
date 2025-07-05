@@ -37,8 +37,11 @@ def create_app(test_config:dict | None=None):
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app,db)
-
     login_manager.init_app(app)
+
+    
+    login_manager.login_view = "auth.login_operator"       
+    login_manager.login_message = "Devi prima effettuare il login."
 
     @login_manager.user_loader
     def load_user(user_id):
