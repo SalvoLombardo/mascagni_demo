@@ -15,7 +15,7 @@ __pycache__/
 .env
 
 # Cartelle di Flask-Migrate
-migrations/versions/
+# migrations/versions/
 
 # Cartelle editor
 .vscode/
