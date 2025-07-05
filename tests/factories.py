@@ -50,8 +50,6 @@ def make_subscriber(first_name, last_name, phone_number="0000", note=""):
     db.session.flush()
     return sub
     
-
-
 def make_subscription(subscription_is_paid,subscription_payment_method,subscription_note,physical_ticket_id ,subscriber_id,campaign_id,operator_id):
     
     subscription=Subscription(

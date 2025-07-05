@@ -1,6 +1,6 @@
 from datetime import datetime, UTC
 from app.extension import db
-from app.service.subscriber_service import get_available_tickets_for_operator,find_duplicates,save_new_subscriber_and_subscription,get_subscription_this_year
+from app.service.subscriber_service import get_available_tickets_for_operator,find_duplicates,save_new_subscriber_and_subscription,get_subscription_this_year,get_subscriber_not_paid_by_operator
 from app.models import Subscriber, Subscription, PhysicalTicket
 from tests.factories import make_operator,make_campaign,make_ticket,make_subscriber,make_subscription
 
@@ -127,3 +127,28 @@ def test_get_subscription_this_year(db_session):
     assert result1 == False
     assert result2 == True
 
+
+def test_get_subscriber_not_paid_by_operator(db_session):
+    campaign=make_campaign()
+
+    subscriber1=make_subscriber('Mario','Rossi','123','')
+    subscriber2=make_subscriber('Paolo','Gallo','456','')
+    subscriber3=make_subscriber('Salvo','Brambilla','789','')
+
+    subscription1=make_subscription(False,'non_pagato','',1,1,1,1)
+    subscription2=make_subscription(True,'contanti','',2,2,2,1)
+    subscription3=make_subscription(False,'non_pagato','',3,3,1,2)#not operator 1
+
+    ticket1=make_ticket(1,1,1,False)
+    ticket2=make_ticket(2,1,1,True)
+    ticket3=make_ticket(3,2,1,True)
+
+    op1=make_operator('op1','x','fname','lname',False)
+    op2=make_operator('op2','x','fname','lname',False)
+
+    result=get_subscriber_not_paid_by_operator(1)
+
+    assert len(result)==1
+
+
+    
