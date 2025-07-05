@@ -94,12 +94,23 @@ def save_new_subscriber_and_subscription(data, is_new_subscriber):
         flash("Abbonato già iscritto per l’anno corrente", "warning")
         return False
     
+from datetime import datetime
+
 def get_subscriber_not_paid_by_operator(operator_id: int):
-    return Subscription.query.join(PhysicalTicket).filter(
-        Subscription.subscription_is_paid == False,
-        PhysicalTicket.physical_ticket_is_available == False,
-        Subscription.operator_id == operator_id
-    ).all()
+    current_year = datetime.now().year                 
+    return (
+        Subscription.query
+        .join(PhysicalTicket)
+        .join(SubscriptionCampaign,
+              Subscription.campaign_id == SubscriptionCampaign.campaign_id)
+        .filter(
+            Subscription.subscription_is_paid == False,           
+            PhysicalTicket.physical_ticket_is_available == False,  
+            Subscription.operator_id == operator_id,              
+            SubscriptionCampaign.campaign_year == current_year     
+        )
+        .all()
+    )
 
 def find_subscriber_by_operator(subscriber_first_name,subscriber_last_name,operator_id):
     if operator_id is not None:#if operator_id=None means he's an Admin so we can search every subscriber 

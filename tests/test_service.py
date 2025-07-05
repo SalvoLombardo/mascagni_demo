@@ -126,3 +126,4 @@ def test_get_subscription_this_year(db_session):
 
     assert result1 == False
     assert result2 == True
+
