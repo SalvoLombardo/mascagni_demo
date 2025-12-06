@@ -1,9 +1,9 @@
+**see aap/docs for more info
 
 Demo credentials (admin):
 user: admin1
 pass: 0000
 link: https://mascagnidemo-production.up.railway.app
-
 
 
 
@@ -70,8 +70,6 @@ export SECRET_KEY=change-me
 
 # 4. run
 flask run
-
-
 
 
 ⸻
